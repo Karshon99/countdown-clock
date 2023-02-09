@@ -1,6 +1,9 @@
 import "./App.css";
 import React from "react";
 import SetTime from "./components/SetTime";
+import Toggle from "./components/Toggle";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRepeat } from "@fortawesome/free-solid-svg-icons";
 
 class App extends React.Component {
   state = {
@@ -27,7 +30,16 @@ class App extends React.Component {
           <SetTime {...breakProps} />
           <SetTime {...sessionProps} />
         </div>
-        <div>Clock Here</div>
+        <div className="clock-container">
+          <h1>Session</h1>
+          <span>25:00</span>
+          <div className="flex">
+            <Toggle />
+            <button>
+              <FontAwesomeIcon icon={faRepeat} />
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
