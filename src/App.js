@@ -6,12 +6,51 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRepeat } from "@fortawesome/free-solid-svg-icons";
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.interval = undefined;
+  }
   state = {
     breakCount: 5,
     sessionCount: 25,
+    clockCount: 25 * 60,
+    currentTime: "Session",
+    isPlaying: false,
+  };
+  handlePlayPause = () => {
+    const { isPlaying } = this.state;
+
+    if (isPlaying) {
+      clearInterval(this.interval);
+      this.setState({
+        isPlaying: false,
+      });
+    } else {
+      clearInterval(this.interval);
+      this.setState({
+        isPlaying: true,
+      });
+
+      this.interval = setInterval(() => {
+        const { clockCount } = this.state;
+        this.setState({
+          clockCount: clockCount - 1,
+        });
+      }, 1000);
+    }
+  };
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+  convertToMinutes = (count) => {
+    const minutes = Math.floor(count / 60);
+    let seconds = count % 60;
+
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    return `${minutes}:${seconds}`;
   };
   render() {
-    const { breakCount, sessionCount } = this.state;
+    const { breakCount, sessionCount, clockCount, currentTime } = this.state;
     const breakProps = {
       title: "Break Length",
       count: breakCount,
@@ -31,11 +70,11 @@ class App extends React.Component {
           <SetTime {...sessionProps} />
         </div>
         <div className="clock-container">
-          <h1>Session</h1>
-          <span>25:00</span>
+          <h1>{currentTime}</h1>
+          <span>{this.convertToMinutes(clockCount)}</span>
           <div className="flex">
-            <Toggle />
-            <button>
+            <Toggle onClick={this.handlePlayPause} />
+            <button onClick={this.handleReset}>
               <FontAwesomeIcon icon={faRepeat} />
             </button>
           </div>
