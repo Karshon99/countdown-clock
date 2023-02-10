@@ -32,11 +32,41 @@ class App extends React.Component {
       });
 
       this.interval = setInterval(() => {
-        const { clockCount } = this.state;
-        this.setState({
-          clockCount: clockCount - 1,
-        });
+        const { clockCount, currentTime, breakCount, sessionCount } =
+          this.state;
+        if (clockCount === 0) {
+          this.setState({
+            currentTime: currentTime === "Session" ? "Break" : "Session",
+            clockCount:
+              currentTime === "Session" ? breakCount * 60 : sessionCount * 60,
+          });
+        } else {
+          this.setState({
+            clockCount: clockCount - 1,
+          });
+        }
       }, 1000);
+    }
+  };
+  handleReset = () => {
+    const { isPlaying } = this.state;
+    this.setState({
+      breakCount: 5,
+      sessionCount: 25,
+      clockCount: 25 * 60,
+      currentTime: "Session",
+      isPlaying: false,
+    });
+    if (isPlaying) {
+      clearInterval(this.interval);
+      this.setState({
+        isPlaying: false,
+      });
+    } else {
+      clearInterval(this.interval);
+      this.setState({
+        isPlaying: true,
+      });
     }
   };
   componentWillUnmount() {
@@ -73,7 +103,10 @@ class App extends React.Component {
           <h1>{currentTime}</h1>
           <span>{this.convertToMinutes(clockCount)}</span>
           <div className="flex">
-            <Toggle onClick={this.handlePlayPause} />
+            <Toggle
+              onClick={this.handlePlayPause}
+              isPlaying={this.state.isPlaying}
+            />
             <button onClick={this.handleReset}>
               <FontAwesomeIcon icon={faRepeat} />
             </button>

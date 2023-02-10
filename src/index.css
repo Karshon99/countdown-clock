@@ -49,6 +49,7 @@ button {
   font-size: 25px;
   color: #ecf0f1;
   border-radius: 10px;
+
   box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
   cursor: pointer;
 
@@ -56,6 +57,10 @@ button {
 
 button:hover {
   opacity: 0.8;
+}
+
+button:active {
+  transform: scale(0.95);
 }
 
 .wrapper span {
@@ -69,9 +74,10 @@ button:hover {
   border-radius: 15px;
   border: 1px solid white;
   display: inline-block;
-  padding: 15px 100px;
+  padding: 15px;
   background-color: #1d2a38;
   margin-top: 20px;
+  min-width: 400px;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
