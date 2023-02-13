@@ -5,11 +5,9 @@ import Toggle from "./components/Toggle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRepeat } from "@fortawesome/free-solid-svg-icons";
 
+const audio = document.getElementById("beep");
+
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.interval = undefined;
-  }
   state = {
     breakCount: 5,
     sessionCount: 25,
@@ -17,6 +15,16 @@ class App extends React.Component {
     currentTime: "Session",
     isPlaying: false,
   };
+
+  constructor(props) {
+    super(props);
+    this.interval = undefined;
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   handlePlayPause = () => {
     const { isPlaying } = this.state;
 
@@ -40,6 +48,7 @@ class App extends React.Component {
             clockCount:
               currentTime === "Session" ? breakCount * 60 : sessionCount * 60,
           });
+          audio.play();
         } else {
           this.setState({
             clockCount: clockCount - 1,
@@ -68,16 +77,47 @@ class App extends React.Component {
         isPlaying: true,
       });
     }
+    audio.pause();
+    audio.currentTime = 0;
   };
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
   convertToMinutes = (count) => {
     const minutes = Math.floor(count / 60);
     let seconds = count % 60;
 
     seconds = seconds < 10 ? "0" + seconds : seconds;
     return `${minutes}:${seconds}`;
+  };
+  handleBreakDecrease = () => {
+    const { breakCount } = this.state;
+    if (breakCount > 0) {
+      this.setState({
+        breakCount: breakCount - 1,
+      });
+    }
+  };
+  handleBreakIncrease = () => {
+    const { breakCount } = this.state;
+    if (breakCount < 60) {
+      this.setState({
+        breakCount: breakCount + 1,
+      });
+    }
+  };
+  handleSessionDecrease = () => {
+    const { sessionCount } = this.state;
+    if (sessionCount > 0) {
+      this.setState({
+        sessionCount: sessionCount - 1,
+      });
+    }
+  };
+  handleSessionIncrease = () => {
+    const { sessionCount } = this.state;
+    if (sessionCount < 60) {
+      this.setState({
+        sessionCount: sessionCount + 1,
+      });
+    }
   };
   render() {
     const { breakCount, sessionCount, clockCount, currentTime } = this.state;
@@ -90,8 +130,8 @@ class App extends React.Component {
     const sessionProps = {
       title: "Session Length",
       count: sessionCount,
-      handleDecrease: this.handleBreakDecrease,
-      handleIncrease: this.handleBreakIncrease,
+      handleDecrease: this.handleSessionDecrease,
+      handleIncrease: this.handleSessionIncrease,
     };
     return (
       <div className="App">
